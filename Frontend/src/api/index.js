@@ -22,7 +22,7 @@ export const register = (data) => API.post('/auth/register', data);
 
 // --- FINANCE / BALANCE SHEET ---
 // Fetches the user's current assets and liabilities
-export const getFinance = () => API.get('/finance');
+export const getFinance = () => API.get('/finance/update');
 
 // Updates or creates the user's financial snapshot
 export const updateFinance = (data) => API.post('/finance/update', data);
