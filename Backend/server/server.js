@@ -15,8 +15,8 @@ const app = express();
 // 3. Standard Middlewares
 
  // Allows Frontend to communicate with Backend
+ app.use(cors()); 
 app.use(express.json()); // Allows Backend to read JSON data from requests
-app.use(cors()); 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/finance', require('./routes/financeRoutes'));
 // 4. Define Routes

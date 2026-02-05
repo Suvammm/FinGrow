@@ -1,78 +1,54 @@
 import { useState, useEffect } from 'react';
-import { getFinance } from '../api';
-import { Wallet, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { fetchFinance } from  '../api/api'; // Ensure the casing matches the actual file path
+import './Dashboard.css';
 
 const Dashboard = () => {
-  const [data, setData] = useState(null);
+  const [summary, setSummary] = useState({ netWorth: 0, totalAssets: 0, totalLiabilities: 0 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadDashboardData = async () => {
+    const loadSummary = async () => {
       try {
-        const response = await getFinance();
-        console.log("getFinance response:", response); // Debug log
-        setData(response.data); 
+        setLoading(true);
+        const { data } = await fetchFinance();
+        
+        // If your controller returns data.summary, update the state
+        if (data && data.summary) {
+          setSummary(data.summary);
+        }
       } catch (err) {
-        console.error("Dashboard Fetch Error:", err);
+        console.error("Dashboard fetch failed:", err);
+        setError("Unable to load financial data. Please check your backend.");
       } finally {
         setLoading(false);
       }
     };
-    loadDashboardData();
+    loadSummary();
   }, []);
 
-  if (loading) return <div className="p-10 text-center">Loading Wealth Data...</div>;
-
-  // Defensive checks for summary fields
-  const summary = data?.summary || { totalAssets: 0, totalLiabilities: 0, netWorth: 0, suggestions: [] };
-  const netWorth = typeof summary.netWorth === 'number' ? summary.netWorth : 0;
-  const totalAssets = typeof summary.totalAssets === 'number' ? summary.totalAssets : 0;
-  const totalLiabilities = typeof summary.totalLiabilities === 'number' ? summary.totalLiabilities : 0;
-  const suggestions = Array.isArray(summary.suggestions) ? summary.suggestions : [];
+  if (loading) return <div className="loading-state">Calculating your wealth...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Financial Overview</h1>
+    <div className="dashboard-container">
+      <h1>Financial Overview</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Net Worth */}
-        <div className="bg-indigo-600 p-6 rounded-2xl text-white">
-          <p className="text-indigo-100 text-sm">Net Worth</p>
-          <h2 className="text-4xl font-bold">${netWorth.toLocaleString()}</h2>
+      {error && <div className="dashboard-error-banner">{error}</div>}
+      
+      <div className="card-grid">
+        <div className="card nw">
+          <h3>Net Worth</h3>
+          <p>${Number(summary.netWorth).toLocaleString()}</p>
         </div>
-
-        {/* Assets */}
-        <div className="bg-white border p-6 rounded-2xl">
-          <div className="flex justify-between items-center">
-            <p className="text-slate-500">Total Assets</p>
-            <ArrowUpCircle className="text-emerald-500" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-800">${totalAssets.toLocaleString()}</h2>
+        <div className="card as">
+          <h3>Total Assets</h3>
+          <p>${Number(summary.totalAssets).toLocaleString()}</p>
         </div>
-
-        {/* Liabilities */}
-        <div className="bg-white border p-6 rounded-2xl">
-          <div className="flex justify-between items-center">
-            <p className="text-slate-500">Total Liabilities</p>
-            <ArrowDownCircle className="text-red-500" />
-          </div>
-          <h2 className="text-3xl font-bold text-slate-800">${totalLiabilities.toLocaleString()}</h2>
+        <div className="card lb">
+          <h3>Total Liabilities</h3>
+          <p>${Number(summary.totalLiabilities).toLocaleString()}</p>
         </div>
       </div>
-
-      {/* AI Suggestions from your Backend */}
-      {suggestions.length > 0 && (
-        <div className="mt-8 bg-amber-50 border border-amber-200 p-6 rounded-2xl">
-          <h3 className="font-bold text-amber-800 mb-3">AI Wealth Insights</h3>
-          <ul className="space-y-2">
-            {suggestions.map((tip, i) => (
-              <li key={i} className="text-amber-700 text-sm flex gap-2">
-                <span>•</span> {tip}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };

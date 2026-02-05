@@ -1,34 +1,38 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { fetchGoals, createGoal } from '../api/api';
+import './Goals.css';
 
 const Goals = () => {
-  return (
-    <div className="p-8 max-w-5xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800">Financial Goals</h1>
-          <p className="text-slate-500">Track your progress toward big milestones.</p>
-        </div>
-        <button className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
-          + New Goal
-        </button>
-      </div>
+  const [goals, setGoals] = useState([]);
+  const [newGoal, setNewGoal] = useState({ title: '', targetAmount: '', deadline: '' });
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Placeholder Goal Card */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <h3 className="font-bold text-lg text-slate-800">Emergency Fund</h3>
-          <div className="mt-4 h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-            <div className="bg-indigo-600 h-full w-[45%]"></div>
+  useEffect(() => {
+    fetchGoals().then(res => setGoals(res.data));
+  }, []);
+
+  const addGoal = async (e) => {
+    e.preventDefault();
+    const { data } = await createGoal(newGoal);
+    setGoals([...goals, data]);
+  };
+
+  return (
+    <div className="goals-container">
+      <form className="goal-form" onSubmit={addGoal}>
+        <input placeholder="Goal Title" onChange={e => setNewGoal({...newGoal, title: e.target.value})} />
+        <input type="number" placeholder="Target" onChange={e => setNewGoal({...newGoal, targetAmount: e.target.value})} />
+        <input type="date" onChange={e => setNewGoal({...newGoal, deadline: e.target.value})} />
+        <button type="submit">Add Goal</button>
+      </form>
+      <div className="goals-list">
+        {goals.map(g => (
+          <div key={g._id} className="goal-card">
+            <h4>{g.title}</h4>
+            <p>${g.targetAmount}</p>
           </div>
-          <div className="flex justify-between mt-2 text-sm">
-            <span className="text-slate-500 font-medium">$4,500 saved</span>
-            <span className="text-indigo-600 font-bold">45%</span>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
 };
-
-// THE FINAL MISSING EXPORT:
 export default Goals;

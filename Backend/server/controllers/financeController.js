@@ -16,10 +16,18 @@ const getFinanceData = async (req, res) => {
 
     const calculateTotal = (data) => {
       if (!data) return 0;
-      if (!Array.isArray(data)) {
-        return Object.values(data).reduce((acc, val) => acc + Number(val || 0), 0);
-      }
-      return data.reduce((acc, item) => acc + Number(item.value || 0), 0);
+      
+      // Convert Mongoose document to a plain object so Object.values works correctly
+      const plainData = typeof data.toObject === 'function' ? data.toObject() : data;
+      
+      // Remove the _id if it's inside the nested object to avoid adding it to the sum
+      if (plainData._id) delete plainData._id;
+
+      return Object.values(plainData).reduce((acc, val) => {
+        // Ensure we only add numbers
+        const num = Number(val);
+        return acc + (isNaN(num) ? 0 : num);
+      }, 0);
     };
 
     const totalAssets = calculateTotal(finance.assets);

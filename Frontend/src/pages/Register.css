@@ -1,0 +1,2 @@
+.auth-screen { height: 100vh; display: flex; justify-content: center; align-items: center; background: #1a1a2e; }
+.auth-form { background: white; padding: 40px; border-radius: 10px; width: 300px; display: flex; flex-direction: column; gap: 15px; }

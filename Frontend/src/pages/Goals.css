@@ -1,0 +1,4 @@
+.goal-form { display: flex; gap: 10px; margin-bottom: 30px; }
+.goal-form input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+.goals-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+.goal-card { background: white; padding: 20px; border-radius: 10px; border-left: 5px solid #4ecca3; }

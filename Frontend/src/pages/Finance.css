@@ -1,0 +1,4 @@
+.finance-form { background: white; padding: 30px; border-radius: 10px; max-width: 500px; }
+.input-field { margin-bottom: 15px; display: flex; flex-direction: column; }
+.input-field label { font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; }
+.input-field input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; }

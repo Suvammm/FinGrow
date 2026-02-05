@@ -1,25 +1,28 @@
-import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import './Layout.css';
 
 const Layout = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Persistent Navigation */}
-      <Navbar />
-
-      {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="animate-in fade-in duration-500">
-          <Outlet />
+    <div className="layout-container">
+      <nav className="sidebar">
+        <h2 className="logo">Wealth Engine</h2>
+        <div className="menu">
+          <Link to="/">Dashboard</Link>
+          <Link to="/finance">Wealth Entry</Link>
+          <Link to="/goals">Goals</Link>
         </div>
+        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+      </nav>
+      <main className="content-area">
+        <Outlet />
       </main>
-
-      {/* Optional: Simple Footer */}
-      <footer className="py-6 text-center text-slate-400 text-sm">
-        &copy; 2026 FinGrow Wealth Tracker. All rights reserved.
-      </footer>
     </div>
   );
 };
-
 export default Layout;

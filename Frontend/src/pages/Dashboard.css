@@ -1,0 +1,5 @@
+.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+.card { padding: 30px; border-radius: 15px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.nw { background: #4ecca3; }
+.as { background: #45b7d1; }
+.lb { background: #e94560; }
