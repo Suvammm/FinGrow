@@ -16,6 +16,9 @@ const Layout = () => {
           <Link to="/">Dashboard</Link>
           <Link to="/finance">Wealth Entry</Link>
           <Link to="/goals">Goals</Link>
+         
+          <Link to="/opportunities">Market Opportunities</Link>
+          
         </div>
         <button className="logout-btn" onClick={handleLogout}>Logout</button>
       </nav>

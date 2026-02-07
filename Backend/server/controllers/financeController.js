@@ -3,39 +3,20 @@ const Finance = require('../models/Finance');
 // --- GET DATA ---
 const getFinanceData = async (req, res) => {
   try {
-    const userId = req.user._id || req.user.id || req.user;
-    const finance = await Finance.findOne({ user: userId });
+    const userId = req.user.id || req.user._id;
+    const finance = await Finance.findOne({ user: userId }).lean();
 
     if (!finance) {
-      return res.status(200).json({
-        assets: [],
-        liabilities: [],
-        summary: { totalAssets: 0, totalLiabilities: 0, netWorth: 0 }
-      });
+      return res.json({ summary: { totalAssets: 0, totalLiabilities: 0, netWorth: 0 } });
     }
 
-    const calculateTotal = (data) => {
-      if (!data) return 0;
-      
-      // Convert Mongoose document to a plain object so Object.values works correctly
-      const plainData = typeof data.toObject === 'function' ? data.toObject() : data;
-      
-      // Remove the _id if it's inside the nested object to avoid adding it to the sum
-      if (plainData._id) delete plainData._id;
+    // Helper to sum up values in a sub-object (like assets or liabilities)
+    const sum = (obj) => Object.values(obj || {}).reduce((a, b) => a + (Number(b) || 0), 0);
 
-      return Object.values(plainData).reduce((acc, val) => {
-        // Ensure we only add numbers
-        const num = Number(val);
-        return acc + (isNaN(num) ? 0 : num);
-      }, 0);
-    };
-
-    const totalAssets = calculateTotal(finance.assets);
-    const totalLiabilities = calculateTotal(finance.liabilities);
+    const totalAssets = sum(finance.assets);
+    const totalLiabilities = sum(finance.liabilities);
 
     res.json({
-      assets: finance.assets || [],
-      liabilities: finance.liabilities || [],
       summary: {
         totalAssets,
         totalLiabilities,
@@ -43,8 +24,7 @@ const getFinanceData = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("CRITICAL ERROR:", error.message);
-    res.status(500).json({ message: "Backend crashed", error: error.message });
+    res.status(500).json({ message: "Error" });
   }
 };
 
@@ -63,9 +43,40 @@ const updateFinanceData = async (req, res) => {
     res.status(400).json({ message: "Invalid financial data provided" });
   }
 };
+// Add this to your financeController.js
+const getAiInsights = async (req, res) => {
+  try {
+    const { assets, liabilities } = req.body;
 
+    // 1. Calculate totals for analysis
+    const totalAssets = Object.values(assets || {}).reduce((a, b) => a + (Number(b) || 0), 0);
+    const totalLiabilities = Object.values(liabilities || {}).reduce((a, b) => a + (Number(b) || 0), 0);
+    const netWorth = totalAssets - totalLiabilities;
+
+    let suggestion = "";
+
+    // 2. AI Logic Rules
+    if (liabilities.creditCardDues > 1000) {
+      suggestion = "⚠️ Immediate Action: Your credit card debt is high. With interest rates often above 30%, paying this off is a better 'investment' than stocks right now.";
+    } else if (assets.crypto > (totalAssets * 0.25)) {
+      suggestion = "🚀 Portfolio Risk: Over 25% of your wealth is in Crypto. While growth is high, consider moving some gains into 'Real Estate' or 'Gold' for stability.";
+    } else if (assets.cash > (totalAssets * 0.4) && totalAssets > 10000) {
+      suggestion = "💰 Cash Drag: You are holding a lot of liquid cash. Inflation is eating your purchasing power. Have you considered 'Mutual Funds' or 'Fixed Deposits'?";
+    } else if (netWorth > 0 && totalLiabilities === 0) {
+      suggestion = "🌟 Rare Achievement: You are debt-free with a positive net worth! You are in a perfect position to explore aggressive 'Stock' or 'Real Estate' investments.";
+    } else {
+      suggestion = "📈 Wealth Building: Focus on increasing your 'Mutual Funds' SIPs. Your current asset-to-liability ratio is healthy. Keep it up!";
+    }
+
+    res.json({ suggestion });
+  } catch (error) {
+    console.error("AI Logic Error:", error);
+    res.status(500).json({ message: "AI Analysis failed" });
+  }
+};
 // --- EXPORT BOTH ---
 module.exports = {
   getFinanceData,
-  updateFinanceData
+  updateFinanceData,
+  getAiInsights
 };

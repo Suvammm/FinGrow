@@ -1,52 +1,94 @@
-import { useState, useEffect } from 'react';
-import { fetchFinance } from  '../api/api'; // Ensure the casing matches the actual file path
+import React from 'react';
+import { updateFinance } from '../api/api';
+
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const [summary, setSummary] = useState({ netWorth: 0, totalAssets: 0, totalLiabilities: 0 });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const stockNews = [
+    { id: 1, title: "Nifty 50 Gains 1.2%", impact: "Positive", time: "5m ago" },
+    { id: 2, title: "Tech Stocks Rally on AI Growth", impact: "High", time: "20m ago" },
+    { id: 3, title: "Federal Reserve Maintains Interest Rates", impact: "Neutral", time: "1h ago" }
+  ];
 
-  useEffect(() => {
-    const loadSummary = async () => {
-      try {
-        setLoading(true);
-        const { data } = await fetchFinance();
-        
-        // If your controller returns data.summary, update the state
-        if (data && data.summary) {
-          setSummary(data.summary);
-        }
-      } catch (err) {
-        console.error("Dashboard fetch failed:", err);
-        setError("Unable to load financial data. Please check your backend.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadSummary();
-  }, []);
+  const landTrends = [
+    { city: "Bengaluru East", increase: "+22%", type: "Residential" },
+    { city: "Pune IT Corridor", increase: "+18%", type: "Commercial" },
+    { id: 3, city: "Navi Mumbai Airport Zone", increase: "+35%", type: "Investment Hotspot" }
+  ];
 
-  if (loading) return <div className="loading-state">Calculating your wealth...</div>;
+  const growingStates = [
+    { name: "Karnataka", gdpGrowth: "8.2%", sector: "Technology" },
+    { name: "Maharashtra", gdpGrowth: "7.9%", sector: "Manufacturing" },
+    { name: "Gujarat", gdpGrowth: "8.5%", sector: "Renewable Energy" }
+  ];
 
   return (
     <div className="dashboard-container">
-      <h1>Financial Overview</h1>
-      
-      {error && <div className="dashboard-error-banner">{error}</div>}
-      
-      <div className="card-grid">
-        <div className="card nw">
-          <h3>Net Worth</h3>
-          <p>${Number(summary.netWorth).toLocaleString()}</p>
+      <header className="dash-header">
+        <h1>Market Intelligence</h1>
+        <span className="live-pulse">● Live Market Feed</span>
+      </header>
+
+      <div className="market-grid">
+        {/* STOCK NEWS SECTION */}
+        <div className="insight-card">
+          <div className="card-header">
+            <h3>📈 Stock Market News</h3>
+          </div>
+          <div className="news-list">
+            {stockNews.map(news => (
+              <div key={news.id} className="news-item">
+                <span className={`impact-tag ${news.impact.toLowerCase()}`}>{news.impact}</span>
+                <p>{news.title}</p>
+                <small>{news.time}</small>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="card as">
-          <h3>Total Assets</h3>
-          <p>${Number(summary.totalAssets).toLocaleString()}</p>
+
+        {/* LAND PRICE SECTION */}
+        <div className="insight-card">
+          <div className="card-header">
+            <h3>🏗️ Land Price Appreciation</h3>
+          </div>
+          <table className="trend-table">
+            <thead>
+              <tr>
+                <th>Region</th>
+                <th>Growth</th>
+              </tr>
+            </thead>
+            <tbody>
+              {landTrends.map((land, i) => (
+                <tr key={i}>
+                  <td>
+                    <strong>{land.city}</strong><br/>
+                    <small>{land.type}</small>
+                  </td>
+                  <td className="growth-text">{land.increase}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <div className="card lb">
-          <h3>Total Liabilities</h3>
-          <p>${Number(summary.totalLiabilities).toLocaleString()}</p>
+
+        {/* STATE GROWTH SECTION */}
+        <div className="insight-card">
+          <div className="card-header">
+            <h3>🚀 Fastest Growing States</h3>
+          </div>
+          <div className="state-ranking">
+            {growingStates.map((state, i) => (
+              <div key={i} className="state-row">
+                <div className="state-info">
+                  <span className="rank">#{i + 1}</span>
+                  <strong>{state.name}</strong>
+                  <p>Primary Sector: {state.sector}</p>
+                </div>
+                <div className="growth-badge">{state.gdpGrowth}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -23,10 +23,10 @@ API.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
+export const getAiInsights = (data) => API.post('/finance/ai-insights', data);
 export const login = (data) => API.post('/auth/login', data);
 export const register = (data) => API.post('/auth/register', data);
-export const fetchFinance = () => API.get('/finance');
 export const updateFinance = (data) => API.post('/finance/update', data);
+export const fetchFinance = () => API.get('/finance');
 export const fetchGoals = () => API.get('/goals');
 export const createGoal = (data) => API.post('/goals', data);

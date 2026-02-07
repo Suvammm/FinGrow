@@ -1,5 +1,29 @@
-.card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
-.card { padding: 30px; border-radius: 15px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-.nw { background: #4ecca3; }
-.as { background: #45b7d1; }
-.lb { background: #e94560; }
+.dashboard-container { padding: 30px; background: #f8fafc; min-height: 100vh; }
+
+.dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+
+.live-pulse { color: #ef4444; font-weight: bold; animation: pulse 2s infinite; }
+
+.market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+
+.insight-card { background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+.card-header { padding: 20px; border-bottom: 1px solid #f1f5f9; background: #ffffff; }
+
+/* News Styles */
+.news-item { padding: 15px 20px; border-bottom: 1px solid #f8fafc; transition: background 0.3s; }
+.news-item:hover { background: #f1f5f9; }
+.impact-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; }
+.impact-tag.positive { background: #dcfce7; color: #166534; }
+.impact-tag.neutral { background: #f1f5f9; color: #475569; }
+
+/* Table Styles */
+.trend-table { width: 100%; border-collapse: collapse; }
+.trend-table td, .trend-table th { padding: 15px 20px; text-align: left; }
+.growth-text { color: #10b981; font-weight: bold; font-size: 18px; }
+
+/* State Ranking Styles */
+.state-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f8fafc; }
+.growth-badge { background: #6366f1; color: white; padding: 5px 12px; border-radius: 8px; font-weight: bold; }
+
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
