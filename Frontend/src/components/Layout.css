@@ -1,45 +1,7 @@
-.layout-container {
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-  }
-  
-  .main-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: #f8fbff; /* Light Azure BG */
-  }
-  
-  /* THE HEADER SETTINGS */
-  .top-header {
-    height: 75px;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* This forces left and right apart */
-    padding: 0 30px;
-    border-bottom: 1px solid #e2e8f0;
-    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.03);
-  }
-  
-  .header-right {
-    display: flex;
-    align-items: center;
-    /* Ensuring it stays in the corner */
-    margin-left: auto; 
-  }
-  
-  .content-area {
-    flex: 1;
-    padding: 35px;
-    overflow-y: auto;
-  }
-  
-  /* Page Title Styling */
-  .page-title {
-    color: #1e293b;
-    font-weight: 700;
-    font-size: 1.1rem;
-  }
+.layout-container { display: flex; min-height: 100vh; font-family: sans-serif; }
+.sidebar { width: 250px; background: #5353db; color: white; display: flex; flex-direction: column; padding: 20px; }
+.logo { color: #4ecca3; margin-bottom: 40px; }
+.menu { flex-grow: 1; display: flex; flex-direction: column; gap: 15px; }
+.menu a { color: #eee; text-decoration: none; font-size: 1.1rem; }
+.logout-btn { background: #2e069a; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; }
+.content-area { flex-grow: 1; background: #f4f4f9; padding: 40px; overflow-y: auto;border-radius: 4px; }
