@@ -37,3 +37,20 @@ exports.setGoal = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+// @desc    Delete a goal for logged in user
+// @route   DELETE /api/goals/:id
+exports.deleteGoal = async (req, res) => {
+    try {
+        const goal = await Goal.findOne({ _id: req.params.id, user: req.user.id });
+
+        if (!goal) {
+            return res.status(404).json({ message: 'Goal not found' });
+        }
+
+        await goal.deleteOne();
+        res.status(200).json({ message: 'Goal deleted', id: req.params.id });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

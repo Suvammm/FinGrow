@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -6,9 +5,6 @@ const connectDB = require('./config/db');
 
 // 1. Load Environment Variables
 dotenv.config();
-
-// 2. Connect to MongoDB
-connectDB();
 
 const app = express();
 
@@ -36,7 +32,22 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
+const allowNoDb = process.env.ALLOW_NO_DB === 'true';
 
-app.listen(PORT, () => {
-  console.log(`🚀 Wealth Engine running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+  } catch (error) {
+    if (!allowNoDb) {
+      console.error(`Startup failed: ${error.message}`);
+      process.exit(1);
+    }
+    console.warn('⚠️ Starting server without MongoDB (ALLOW_NO_DB=true)');
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Wealth Engine running on port ${PORT}`);
+  });
+};
+
+startServer();

@@ -11,6 +11,8 @@ import Goals from './pages/Goals';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Opportunities from './pages/Opportunities'; // Imported your new page
+import Profile from './pages/Profile';
+import FinanceStatus from './pages/FinanceStatus';
 
 /**
  * @description A wrapper component that checks for the JWT token.
@@ -47,6 +49,8 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="finance" element={<Finance />} />
           <Route path="goals" element={<Goals />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="finance-status" element={<FinanceStatus />} />
           
           {/* ADDED: New Opportunities Route */}
           <Route path="opportunities" element={<Opportunities />} />

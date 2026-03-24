@@ -3,6 +3,7 @@ import './Opportunities.css';
 
 const Opportunities = () => {
   const [activeRegion, setActiveRegion] = useState("Bengaluru");
+  const [selectedBrochureId, setSelectedBrochureId] = useState(null);
 
   const localProjects = [
     {
@@ -13,7 +14,17 @@ const Opportunities = () => {
       status: "Upcoming (Q4 2026)",
       expectedROI: "12-15% p.a.",
       contact: "+91 98765 43210",
-      description: "A sustainable housing project with AI-driven energy management."
+      description: "A sustainable housing project with AI-driven energy management.",
+      brochure: {
+        priceRange: "INR 72L - 1.45Cr",
+        possession: "December 2026",
+        minTicketSize: "INR 10L booking + milestone payments",
+        keyHighlights: [
+          "1/2/3 BHK inventory with smart-meter integration",
+          "Clubhouse, rooftop solar, water recycling plant",
+          "Near ITPL, metro extension and upcoming ring road",
+        ],
+      },
     },
     {
       id: 2,
@@ -23,7 +34,17 @@ const Opportunities = () => {
       status: "On-going Construction",
       expectedROI: "8% Rental Yield",
       contact: "invest@techhubplaza.com",
-      description: "High-yield commercial spaces tailored for tech startups."
+      description: "High-yield commercial spaces tailored for tech startups.",
+      brochure: {
+        priceRange: "INR 1.1Cr - 4.8Cr",
+        possession: "Phase-1: June 2027",
+        minTicketSize: "INR 25L initial commitment",
+        keyHighlights: [
+          "Grade-A commercial floors with LEED design",
+          "Pre-leasing support for startup and co-working tenants",
+          "Projected occupancy ramp in 18-24 months post handover",
+        ],
+      },
     }
   ];
 
@@ -58,7 +79,30 @@ const Opportunities = () => {
                 <small>Interested? Contact:</small>
                 <strong>{project.contact}</strong>
               </div>
-              <button className="invest-btn">View Brochure</button>
+              <button
+                className="invest-btn"
+                type="button"
+                onClick={() =>
+                  setSelectedBrochureId((prev) => (prev === project.id ? null : project.id))
+                }
+              >
+                {selectedBrochureId === project.id ? 'Hide Brochure' : 'View Brochure'}
+              </button>
+              {selectedBrochureId === project.id ? (
+                <div className="brochure-panel">
+                  <h4>{project.title} Brochure</h4>
+                  <div className="brochure-grid">
+                    <p><strong>Price Range:</strong> {project.brochure.priceRange}</p>
+                    <p><strong>Possession:</strong> {project.brochure.possession}</p>
+                    <p><strong>Minimum Ticket:</strong> {project.brochure.minTicketSize}</p>
+                  </div>
+                  <ul>
+                    {project.brochure.keyHighlights.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
           ))}
         </section>

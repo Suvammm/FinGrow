@@ -1,9 +1,17 @@
 import React from 'react';
-import { updateFinance } from '../api/api';
+import ProfileMenu from '../components/profileMenu';
 
 import './Dashboard.css';
 
 const Dashboard = () => {
+  let user = null;
+  try {
+    const storedUser = localStorage.getItem('user');
+    user = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    user = null;
+  }
+
   const stockNews = [
     { id: 1, title: "Nifty 50 Gains 1.2%", impact: "Positive", time: "5m ago" },
     { id: 2, title: "Tech Stocks Rally on AI Growth", impact: "High", time: "20m ago" },
@@ -24,6 +32,9 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
+      <div className="dashboard-topbar">
+        <ProfileMenu user={user} />
+      </div>
       <header className="dash-header">
         <h1>Market Intelligence</h1>
         <span className="live-pulse">● Live Market Feed</span>

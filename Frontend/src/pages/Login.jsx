@@ -20,6 +20,15 @@ const Login = () => {
       if (response.data && response.data.token) {
         // 2. Save to LocalStorage
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('lastLoginEmail', creds.email);
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            id: response.data._id,
+            name: response.data.name,
+            email: response.data.email,
+          })
+        );
         
         console.log("Login Successful! Token stored.");
         

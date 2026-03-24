@@ -1,4 +1,5 @@
 .dashboard-container { padding: 30px; background: #f8fafc; min-height: 100vh; }
+.dashboard-topbar { display: flex; justify-content: flex-end; margin-bottom: 10px; }
 
 .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 

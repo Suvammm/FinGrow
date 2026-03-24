@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { updateFinance, getAiInsights } from '../api/api';
+import { useEffect, useState } from 'react';
+import { updateFinance, getAiInsights, fetchFinance } from '../api/api';
 import './Finance.css';
+
+const formatLabel = (key) => key.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
 
 const Finance = () => {
   const [financeData, setFinanceData] = useState({
@@ -8,8 +10,27 @@ const Finance = () => {
     liabilities: { homeLoan: 0, educationLoan: 0, personalLoan: 0, creditCardDues: 0 }
   });
   
-  const [aiSuggestion, setAiSuggestion] = useState(null);
+  const [aiPlan, setAiPlan] = useState(null);
+  const [aiError, setAiError] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  useEffect(() => {
+    const loadFinance = async () => {
+      try {
+        const response = await fetchFinance();
+        const payload = response?.data || {};
+        setFinanceData({
+          assets: { ...financeData.assets, ...(payload.assets || {}) },
+          liabilities: { ...financeData.liabilities, ...(payload.liabilities || {}) },
+        });
+      } catch (err) {
+        // Keep the current defaults when fetch fails.
+      }
+    };
+
+    loadFinance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChange = (section, key, value) => {
     setFinanceData({
@@ -22,9 +43,23 @@ const Finance = () => {
     e.preventDefault();
     try {
       await updateFinance(financeData);
+      window.dispatchEvent(new Event('finance-updated'));
       alert("Wealth Engine Updated Successfully!");
     } catch (err) {
       alert("Error saving data");
+    }
+  };
+
+  const handleAnalyze = async () => {
+    setIsAnalyzing(true);
+    setAiError('');
+    try {
+      const response = await getAiInsights(financeData);
+      setAiPlan(response?.data || null);
+    } catch (err) {
+      setAiError('AI analysis failed. Please try again.');
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -46,7 +81,7 @@ const Finance = () => {
             <div className="input-grid">
               {Object.keys(financeData.assets).map(key => (
                 <div key={key} className="input-box">
-                  <label>{key.replace(/([A-Z])/g, ' $1')}</label>
+                  <label>{formatLabel(key)}</label>
                   <input 
                     type="number" 
                     value={financeData.assets[key]} 
@@ -66,7 +101,7 @@ const Finance = () => {
             <div className="input-grid">
               {Object.keys(financeData.liabilities).map(key => (
                 <div key={key} className="input-box">
-                  <label>{key.replace(/([A-Z])/g, ' $1')}</label>
+                  <label>{formatLabel(key)}</label>
                   <input 
                     type="number" 
                     value={financeData.liabilities[key]} 
@@ -80,10 +115,74 @@ const Finance = () => {
 
         <div className="form-actions">
           <button type="submit" className="save-btn-large">Sync Wealth Engine</button>
+          <button
+            type="button"
+            className="analyze-btn-large"
+            onClick={handleAnalyze}
+            disabled={isAnalyzing}
+          >
+            {isAnalyzing ? 'Analyzing...' : 'Analyze with AI'}
+          </button>
         </div>
       </form>
 
-      {/* Floating AI Button remains the same as before */}
+      {aiError ? <p className="ai-error">{aiError}</p> : null}
+
+      {aiPlan ? (
+        <section className="ai-plan-card">
+          <div className="ai-plan-header">
+            <h3>AI Investment Analysis</h3>
+            <span className="ai-source">{aiPlan?.source === 'openai' ? 'OpenAI' : 'Rule Engine'}</span>
+          </div>
+          <p className="ai-summary">{aiPlan.summary}</p>
+
+          <div className="ai-grid">
+            <article className="ai-panel">
+              <h4>What may be wrong</h4>
+              <ul>
+                {(aiPlan.wrongInvestments || []).map((item, index) => (
+                  <li key={`wrong-${index}`}>{item}</li>
+                ))}
+              </ul>
+            </article>
+            <article className="ai-panel">
+              <h4>Risk signals</h4>
+              <ul>
+                {(aiPlan.risks || []).map((item, index) => (
+                  <li key={`risk-${index}`}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          </div>
+
+          <article className="ai-panel">
+            <h4>Planned steps to grow assets</h4>
+            <ol className="step-list">
+              {(aiPlan.actionPlan || []).map((step, index) => (
+                <li key={`step-${index}`}>
+                  <strong>{step.step}</strong>
+                  <span>Timeline: {step.timeline}</span>
+                  <span>Impact: {step.impact}</span>
+                </li>
+              ))}
+            </ol>
+          </article>
+
+          <article className="ai-panel">
+            <h4>Suggested target allocation</h4>
+            <div className="allocation-grid">
+              {Object.entries(aiPlan.targetAllocation || {}).map(([key, value]) => (
+                <div key={key} className="allocation-item">
+                  <span>{formatLabel(key)}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          {aiPlan.note ? <p className="ai-note">{aiPlan.note}</p> : null}
+        </section>
+      ) : null}
     </div>
   );
 };

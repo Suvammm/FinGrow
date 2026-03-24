@@ -29,6 +29,38 @@
   padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;
 }
 
+.brochure-panel {
+  margin-top: 14px;
+  border: 1px solid #dbe6f6;
+  background: #f8fbff;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.brochure-panel h4 {
+  margin: 0 0 10px;
+  color: #1e293b;
+}
+
+.brochure-grid {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.brochure-grid p {
+  margin: 0;
+  color: #334155;
+}
+
+.brochure-panel ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #334155;
+  display: grid;
+  gap: 6px;
+}
+
 /* Sidebar Guide */
 .guide-sidebar { background: white; padding: 25px; border-radius: 20px; height: fit-content; }
 
@@ -47,4 +79,10 @@
 .advisor-btn { 
   background: white; color: #6366f1; border: none; padding: 10px 20px; 
   border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer;
+}
+
+@media (max-width: 960px) {
+  .opp-layout {
+    grid-template-columns: 1fr;
+  }
 }

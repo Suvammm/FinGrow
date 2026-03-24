@@ -4,6 +4,7 @@
   }
   
   .goals-header { margin-bottom: 30px; }
+  .goals-header p { color: #64748b; }
   
   /* The Add Goal Section */
   .add-goal-card {
@@ -21,9 +22,35 @@
     gap: 20px;
     align-items: flex-end;
   }
+
+  .input-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input-box label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .input-box input {
+    border: 1px solid #d9e4f3;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .input-box input:focus {
+    outline: 2px solid rgba(0, 123, 255, 0.2);
+    border-color: #007bff;
+  }
   
   .add-goal-btn {
-    background: var(--primary-azure);
+    background: #007bff;
     color: white;
     border: none;
     padding: 14px;
@@ -34,6 +61,21 @@
   }
   
   .add-goal-btn:hover { background: #0056b3; transform: translateY(-2px); }
+
+  .assets-tracker {
+    margin: 6px 4px 18px;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .goals-note {
+    margin: 0 4px 16px;
+    color: #475569;
+  }
+
+  .goals-note.error {
+    color: #b91c1c;
+  }
   
   /* The Goal Display Cards */
   .goals-grid {
@@ -82,4 +124,30 @@
     border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
+  }
+
+  .delete-goal-btn {
+    background: #fff1f2;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .delete-goal-btn:hover:not(:disabled) {
+    background: #ffe4e6;
+  }
+
+  .delete-goal-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 900px) {
+    .goal-form-grid {
+      grid-template-columns: 1fr;
+    }
   }

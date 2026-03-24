@@ -30,3 +30,4 @@ export const updateFinance = (data) => API.post('/finance/update', data);
 export const fetchFinance = () => API.get('/finance');
 export const fetchGoals = () => API.get('/goals');
 export const createGoal = (data) => API.post('/goals', data);
+export const deleteGoal = (id) => API.delete(`/goals/${id}`);

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Finance = require('../models/Finance');
 const { updateFinanceData, getFinanceData,  getAiInsights
 } = require('../controllers/financeController');
 const { protect } = require('../middleware/authMiddleware');
