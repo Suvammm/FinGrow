@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Opportunities.css';
 
 const Opportunities = () => {
-  const [activeRegion, setActiveRegion] = useState("Bengaluru");
+  const activeRegion = "Bengaluru";
   const [selectedBrochureId, setSelectedBrochureId] = useState(null);
 
   const localProjects = [
@@ -109,7 +109,11 @@ const Opportunities = () => {
 
         {/* HOW TO INVEST SIDEBAR */}
         <aside className="guide-sidebar">
-          <h3>📘 How to Invest</h3>
+          <div className="guide-sidebar-head">
+            <span className="guide-chip">Investor Guide</span>
+            <h3>How to Invest</h3>
+            <p>Move from interest to allocation with a simple three-step flow.</p>
+          </div>
           <div className="guide-timeline">
             {investmentGuide.map(item => (
               <div key={item.step} className="guide-step">
@@ -120,6 +124,10 @@ const Opportunities = () => {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="guide-note">
+            <strong>Quick tip:</strong>
+            <span> Compare ticket size, delivery date and exit horizon before booking.</span>
           </div>
           <div className="expert-card">
             <p>Need a personal advisor?</p>

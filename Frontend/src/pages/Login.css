@@ -1,83 +1,182 @@
 .auth-screen {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #0f172a; /* Dark professional background */
-  }
-  
-  .auth-card {
-    background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .auth-form h2 {
-    text-align: center;
-    margin-bottom: 24px;
-    color: #1e293b;
-  }
-  
-  .error-message {
-    background: #fee2e2;
-    color: #dc2626;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 14px;
-    text-align: center;
-    margin-bottom: 15px;
-    border: 1px solid #fecaca;
-  }
-  
-  .input-group {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .input-group label {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #64748b;
-  }
-  
-  .input-group input {
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  
-  .input-group input:focus {
-    border-color: #6366f1;
-  }
-  
-  .login-btn {
-    width: 100%;
-    padding: 14px;
-    background: #6366f1;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .auth-footer {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
-    color: #64748b;
-  }
-  
-  .auth-footer span {
-    color: #6366f1;
-    cursor: pointer;
-    font-weight: bold;
-  }
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background: #0f172a;
+}
+
+.auth-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-card-wide {
+  max-width: 460px;
+}
+
+.auth-mode-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+  background: #f8fafc;
+  padding: 8px;
+  border-radius: 14px;
+}
+
+.auth-mode-tabs button {
+  border: none;
+  background: transparent;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.auth-mode-tabs button.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.auth-subtitle {
+  text-align: center;
+  margin: 0 0 24px;
+  color: #64748b;
+  line-height: 1.55;
+}
+
+.error-message,
+.info-message {
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.error-message {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.info-message {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #64748b;
+}
+
+.input-group input {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #6366f1;
+}
+
+.login-btn,
+.secondary-auth-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-btn {
+  background: #6366f1;
+  color: white;
+}
+
+.secondary-auth-btn {
+  background: #e0e7ff;
+  color: #3730a3;
+  margin-bottom: 18px;
+}
+
+.login-btn:disabled,
+.secondary-auth-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.google-auth-block {
+  display: grid;
+  gap: 12px;
+}
+
+.google-button-slot {
+  display: flex;
+  justify-content: center;
+}
+
+.google-note {
+  margin: 0;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.auth-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.auth-footer span {
+  color: #6366f1;
+  cursor: pointer;
+  font-weight: bold;
+}

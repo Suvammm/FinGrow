@@ -23,7 +23,7 @@ const Finance = () => {
           assets: { ...financeData.assets, ...(payload.assets || {}) },
           liabilities: { ...financeData.liabilities, ...(payload.liabilities || {}) },
         });
-      } catch (err) {
+      } catch {
         // Keep the current defaults when fetch fails.
       }
     };
@@ -45,7 +45,7 @@ const Finance = () => {
       await updateFinance(financeData);
       window.dispatchEvent(new Event('finance-updated'));
       alert("Wealth Engine Updated Successfully!");
-    } catch (err) {
+    } catch {
       alert("Error saving data");
     }
   };
@@ -56,7 +56,7 @@ const Finance = () => {
     try {
       const response = await getAiInsights(financeData);
       setAiPlan(response?.data || null);
-    } catch (err) {
+    } catch {
       setAiError('AI analysis failed. Please try again.');
     } finally {
       setIsAnalyzing(false);

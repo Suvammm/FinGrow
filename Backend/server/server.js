@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
+const { startReceivableReminderJob } = require('./services/receivableReminderJob');
 
 // 1. Load Environment Variables
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
@@ -11,9 +12,37 @@ const app = express();
 
 // 3. Standard Middlewares
 
- // Allows Frontend to communicate with Backend
- app.use(cors()); 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 app.use(express.json()); // Allows Backend to read JSON data from requests
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Backend is running',
+    status: 'ok',
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    message: 'API is healthy',
+    status: 'ok',
+  });
+});
+
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/finance', require('./routes/financeRoutes'));
 // 4. Define Routes
@@ -49,6 +78,8 @@ const startServer = async () => {
   app.listen(PORT, () => {
     console.log(`Wealth Engine running on port ${PORT}`);
   });
+
+  startReceivableReminderJob();
 };
 
 startServer();

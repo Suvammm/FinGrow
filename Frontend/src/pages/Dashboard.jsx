@@ -8,7 +8,7 @@ const Dashboard = () => {
   try {
     const storedUser = localStorage.getItem('user');
     user = storedUser ? JSON.parse(storedUser) : null;
-  } catch (error) {
+  } catch {
     user = null;
   }
 

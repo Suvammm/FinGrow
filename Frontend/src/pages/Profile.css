@@ -76,3 +76,60 @@
 .profile-note.error {
   color: #b91c1c;
 }
+
+.profile-note.success {
+  color: #166534;
+}
+
+.profile-name-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  border: 1px solid #dbeafe;
+  background: linear-gradient(135deg, #eff6ff, #f8fbff);
+}
+
+.profile-name-card h3 {
+  margin: 0 0 6px;
+  color: #0f172a;
+}
+
+.profile-name-card p {
+  margin: 0;
+  color: #475569;
+}
+
+.profile-name-row {
+  display: flex;
+  gap: 12px;
+}
+
+.profile-name-row input {
+  flex: 1;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.profile-name-row button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile-name-row button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .profile-name-row {
+    flex-direction: column;
+  }
+}

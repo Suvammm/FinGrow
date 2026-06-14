@@ -6,9 +6,19 @@ const GoalSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  goalType: {
+    type: String,
+    enum: ['financial', 'receivable'],
+    default: 'financial'
+  },
   title: {
     type: String,
-    required: [true, 'Please add a goal title'],
+    required: [
+      function() {
+        return this.goalType !== 'receivable';
+      },
+      'Please add a goal title'
+    ],
     trim: true
   },
   targetAmount: {
@@ -32,6 +42,51 @@ const GoalSchema = new mongoose.Schema({
     type: String,
     enum: ['Low', 'Medium', 'High'],
     default: 'Medium'
+  },
+  debtorName: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  reason: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  recipientEmail: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    default: ''
+  },
+  reminderDate: {
+    type: Date,
+    default: null
+  },
+  reminderFrequency: {
+    type: String,
+    enum: ['Once', 'Daily', 'Weekly'],
+    default: 'Once'
+  },
+  reminderEnabled: {
+    type: Boolean,
+    default: false
+  },
+  nextReminderAt: {
+    type: Date,
+    default: null
+  },
+  lastReminderSentAt: {
+    type: Date,
+    default: null
+  },
+  reminderSentCount: {
+    type: Number,
+    default: 0
+  },
+  reminderCompleted: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 

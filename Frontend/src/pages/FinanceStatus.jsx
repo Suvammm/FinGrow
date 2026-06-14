@@ -95,7 +95,7 @@ const FinanceStatus = () => {
         });
         setLastSyncAt(payload.updatedAt || new Date().toISOString());
         setError('');
-      } catch (err) {
+      } catch {
         setError('Could not load finance status right now.');
       } finally {
         if (!silent) {

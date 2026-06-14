@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { fetchFinance, fetchGoals } from '../api/api';
+import { fetchFinance, fetchGoals, updateProfileName } from '../api/api';
 import './Profile.css';
 
 const sumValues = (obj) =>
@@ -30,8 +30,10 @@ const Profile = () => {
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [saveMessage, setSaveMessage] = useState('');
+  const [savingName, setSavingName] = useState(false);
 
-  const user = useMemo(() => {
+  const storedUser = useMemo(() => {
     try {
       const parsed = JSON.parse(localStorage.getItem('user') || '{}');
       if (parsed?.email) return parsed;
@@ -59,13 +61,16 @@ const Profile = () => {
     }
   }, []);
 
+  const [displayUser, setDisplayUser] = useState(storedUser);
+  const [nameInput, setNameInput] = useState(storedUser?.name || '');
+
   useEffect(() => {
     const loadProfileData = async () => {
       try {
         const [financeRes, goalsRes] = await Promise.all([fetchFinance(), fetchGoals()]);
         setFinance(financeRes?.data || null);
         setGoals(Array.isArray(goalsRes?.data) ? goalsRes.data : []);
-      } catch (err) {
+      } catch {
         setError('Could not load profile stats right now.');
       } finally {
         setLoading(false);
@@ -75,6 +80,37 @@ const Profile = () => {
     loadProfileData();
   }, []);
 
+  const handleSaveName = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSaveMessage('');
+
+    const trimmedName = nameInput.trim();
+    if (!trimmedName) {
+      setError('Please enter a name.');
+      return;
+    }
+
+    try {
+      setSavingName(true);
+      const response = await updateProfileName({ name: trimmedName });
+      const updatedUser = {
+        ...displayUser,
+        name: response.data?.name || trimmedName,
+        email: response.data?.email || displayUser?.email || '',
+        id: response.data?._id || displayUser?.id || '',
+      };
+      setDisplayUser(updatedUser);
+      setNameInput(updatedUser.name);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setSaveMessage('Name updated successfully.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Could not update name right now.');
+    } finally {
+      setSavingName(false);
+    }
+  };
+
   const totalAssets = sumValues(finance?.assets);
   const totalLiabilities = sumValues(finance?.liabilities);
   const netWorth = totalAssets - totalLiabilities;
@@ -83,7 +119,7 @@ const Profile = () => {
     <div className="profile-page">
       <div className="profile-card">
         <div className="profile-avatar">
-          {(user?.name || 'U')
+          {(displayUser?.name || 'U')
             .split(' ')
             .filter(Boolean)
             .slice(0, 2)
@@ -91,14 +127,33 @@ const Profile = () => {
             .join('')}
         </div>
         <div className="profile-user-info">
-          <h1>{user?.name || 'User'}</h1>
-          <p>{user?.email || 'No email available'}</p>
+          <h1>{displayUser?.name || 'User'}</h1>
+          <p>{displayUser?.email || 'No email available'}</p>
         </div>
       </div>
 
       <div className="stats-wrap">
         {loading ? <p className="profile-note">Loading your profile stats...</p> : null}
         {error ? <p className="profile-note error">{error}</p> : null}
+        {saveMessage ? <p className="profile-note success">{saveMessage}</p> : null}
+
+        <form className="profile-name-card" onSubmit={handleSaveName}>
+          <div>
+            <h3>Your Name</h3>
+            <p>Set the name you want the app to display for your account.</p>
+          </div>
+          <div className="profile-name-row">
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+            />
+            <button type="submit" disabled={savingName}>
+              {savingName ? 'Saving...' : 'Save Name'}
+            </button>
+          </div>
+        </form>
 
         <div className="stats-grid">
           <div className="stat-card">
